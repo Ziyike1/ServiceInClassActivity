@@ -1,6 +1,8 @@
 package edu.temple.myapplication
 
 import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.content.ServiceConnection
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -27,16 +29,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViewById<Button>(R.id.startButton).setOnClickListener {
+        Intent(this, TimerService::class.java).also { intent ->
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        }
 
+        findViewById<Button>(R.id.startButton).setOnClickListener {
+            if(isBound){
+                timerService.start(60)
+            }
         }
 
         findViewById<Button>(R.id.pauseButton).setOnClickListener {
-
+            if(isBound){
+                timerService.pause()
+            }
         }
         
         findViewById<Button>(R.id.stopButton).setOnClickListener {
-
+            if(isBound){
+                val binder = timerService.binder
+                binder.stop()
+            }
         }
     }
 }

@@ -9,6 +9,8 @@ import android.util.Log
 @Suppress("ControlFlowWithEmptyBody")
 class TimerService : Service() {
 
+    val binder = TimerBinder()
+    fun getBinder(): IBinder = binder
     private var isRunning = false
 
     lateinit var t: TimerThread
